@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acervo Rosy de Sá Cardoso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&family=Special+Elite&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Direção: dossiê de arquivo. Papel frio, tinta, azul de papel-carbono. Um momento forte: a frase da capa datilografada letra a letra.
+   Display: Instrument Serif. Texto: Hanken Grotesk. Máquina de escrever: Special Elite. Fichas: IBM Plex Mono. */
+:root {
+  --paper: #F1F0EB;
+  --surface: #FAFAF7;
+  --ink: #17191F;
+  --muted: #5A5D66;
+  --rule: #D2D0C7;
+  --carbon: #2C4A8C;
+  --carbon-soft: #E2E7F2;
+  --night: #121419;
+  --night-text: #E9E7E1;
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-type: 'Special Elite', 'Courier New', monospace;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paper:#15171C; --surface:#1C1F26; --ink:#ECEAE4; --muted:#A3A6AF; --rule:#30333C; --carbon:#93AAE2; --carbon-soft:#222A3C; --night:#0D0F13; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --paper:#15171C; --surface:#1C1F26; --ink:#ECEAE4; --muted:#A3A6AF; --rule:#30333C; --carbon:#93AAE2; --carbon-soft:#222A3C; --night:#0D0F13; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 18px; line-height: 1.6; }
+img { max-width: 100%; display: block; }
+a { color: var(--carbon); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+.mono { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+:focus-visible { outline: 2px solid var(--carbon); outline-offset: 3px; }
+
+/* Barra superior */
+header.top { position: fixed; top: 0; left: 0; right: 0; z-index: 20; transition: background-color 300ms ease, border-color 300ms ease; border-bottom: 1px solid transparent; }
+header.top.solid { background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom-color: var(--rule); }
+.top .wrap { display: flex; align-items: center; gap: 24px; min-height: 64px; }
+.brand { font-family: var(--font-display); font-size: 24px; text-decoration: none; color: var(--ink); white-space: nowrap; }
+nav.tabs { display: flex; gap: 2px; overflow-x: auto; margin-left: auto; scrollbar-width: none; }
+nav.tabs a { text-decoration: none; color: var(--muted); padding: 8px 12px; border-radius: 999px; white-space: nowrap; font-size: 15px; font-weight: 500; }
+nav.tabs a:hover { color: var(--ink); }
+nav.tabs a[aria-current="page"] { color: var(--carbon); background: var(--carbon-soft); }
+
+main section.view { display: none; }
+main section.view.active { display: block; }
+
+/* Revelação ao rolar: tudo visível em repouso; só o que está abaixo da dobra espera a rolagem. */
+.reveal.pending { opacity: 0; transform: translateY(32px); }
+.reveal { transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+
+/* Abertura com a foto */
+.hero { position: relative; min-height: min(90vh, 780px); display: flex; align-items: center; overflow: hidden; background: #121419; }
+.hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 90% 22%; filter: grayscale(0.3) brightness(0.78) contrast(1.08) sepia(0.12); }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,20,25,0.97) 0%, rgba(18,20,25,0.86) 36%, rgba(18,20,25,0.2) 68%, rgba(18,20,25,0.45) 100%); }
+.hero .wrap { position: relative; z-index: 1; width: 100%; padding-top: 96px; padding-bottom: 64px; }
+.hero .copy { max-width: 600px; color: #F1EFEA; }
+.hero h1 { font-size: clamp(60px, 9vw, 136px); letter-spacing: -0.02em; }
+.hero h1 em { font-style: italic; color: #A9BEEB; }
+.hero .sub { font-size: 21px; margin-top: 24px; color: #C9C6BE; }
+.hero .cue { margin-top: 40px; display: inline-flex; gap: 12px; align-items: center; text-decoration: none; color: #F1EFEA; font-weight: 500; }
+.hero .cue span.line { width: 48px; height: 1px; background: currentColor; display: inline-block; }
+@media (prefers-reduced-motion: no-preference) { .hero > img { animation: settle 2400ms cubic-bezier(.2,.7,.2,1) both; } }
+@keyframes settle { from { transform: scale(1.08); opacity: 0.4; } to { transform: scale(1); opacity: 1; } }
+.photo { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.photo img { width: 100%; height: auto; filter: saturate(0.92); }
+.photo figcaption { font-size: 14px; color: var(--muted); }
+.with-photo { display: grid; grid-template-columns: 1fr 340px; gap: 64px; align-items: start; }
+.with-photo .side { position: sticky; top: 110px; }
+.band { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 72px; align-items: center; padding: 40px 0 140px; }
+.band h2 { font-size: clamp(44px, 5.5vw, 80px); }
+
+/* Faixa escura da capa */
+.night { background: var(--night); color: var(--night-text); padding: 140px 0; }
+.night .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.typed { font-family: var(--font-type); font-size: clamp(40px, 5.4vw, 76px); line-height: 1.12; min-height: 2.3em; }
+.typed .caret { display: inline-block; width: 0.5em; height: 0.9em; background: #E8A88E; vertical-align: -0.08em; margin-left: 4px; }
+@media (prefers-reduced-motion: no-preference) { .typed .caret { animation: blink 1s steps(1) infinite; } }
+@keyframes blink { 50% { opacity: 0; } }
+.night p.body { color: #BDBAB2; font-size: 19px; max-width: 32em; margin-top: 28px; }
+.night .mono { color: #E8A88E; }
+.night img.capa { width: 100%; max-width: 460px; margin-left: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+
+/* Blocos de texto */
+.chapter { padding: 140px 0; }
+.chapter .head { display: grid; grid-template-columns: 220px 1fr; gap: 40px; margin-bottom: 64px; align-items: baseline; }
+.chapter h2 { font-size: clamp(44px, 6vw, 88px); }
+.lead { font-size: 23px; line-height: 1.5; max-width: 34em; }
+
+/* Linha do tempo */
+.timeline { position: relative; display: flex; flex-direction: column; gap: 0; margin-left: 260px; border-left: 1px solid var(--rule); }
+.tl { position: relative; padding: 0 0 44px 40px; }
+.tl::before { content: ""; position: absolute; left: -6px; top: 14px; width: 11px; height: 11px; border-radius: 50%; background: var(--paper); border: 2px solid var(--carbon); }
+.tl .yr { position: absolute; left: -260px; width: 220px; text-align: right; font-family: var(--font-display); font-size: 40px; line-height: 1.1; color: var(--carbon); }
+.tl p { max-width: 34em; padding-top: 8px; }
+
+/* Números */
+.numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.numbers div { padding: 48px 28px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; gap: 8px; }
+.numbers div:last-child { border-right: 0; }
+.numbers b { font-family: var(--font-display); font-weight: 400; font-size: clamp(64px, 8vw, 120px); line-height: 0.9; font-variant-numeric: tabular-nums; }
+
+/* Poetisa */
+.poet { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.poet h2 em { font-style: italic; color: var(--carbon); }
+.titles { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 40px; font-family: var(--font-display); font-size: 30px; line-height: 1.15; }
+.titles span { color: var(--muted); }
+.titles span.on { color: var(--ink); font-style: italic; }
+.scan { background: var(--surface); padding: 12px; border: 1px solid var(--rule); box-shadow: 0 24px 60px rgba(15,17,22,0.14); }
+
+.quote-band { padding: 120px 0; background: var(--carbon-soft); }
+.quote-band .qgrid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 64px; align-items: center; }
+.quote-band blockquote { margin: 0; font-family: var(--font-display); font-style: italic; font-size: clamp(40px, 5vw, 72px); line-height: 1.08; max-width: 20em; }
+.quote-band cite { display: block; margin-top: 28px; font-style: normal; color: var(--muted); font-size: 17px; }
+
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.duo article { display: flex; flex-direction: column; gap: 20px; }
+.duo h3 { font-size: 44px; }
+
+.explore { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.explore a { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 320px; padding: 24px; text-decoration: none; color: #F4F2EC; overflow: hidden; border-radius: 4px; background: var(--night); }
+.explore a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0.45; transition: transform 700ms ease, opacity 400ms ease; }
+.explore a:hover img { transform: scale(1.05); opacity: 0.6; }
+.explore a b { position: relative; font-family: var(--font-display); font-weight: 400; font-size: 38px; line-height: 1; }
+.explore a span { position: relative; font-size: 15px; margin-top: 6px; color: #D9D6CE; }
+
+/* Páginas do arquivo */
+.page { padding: 120px 0 120px; }
+.section-head { display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; max-width: 760px; }
+.section-head h2 { font-size: clamp(48px, 6vw, 80px); }
+.section-head .lede { font-size: 20px; color: var(--muted); }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; align-items: center; }
+.toolbar input { font: inherit; font-size: 16px; padding: 10px 16px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 999px; min-width: 280px; }
+.chip { font: inherit; font-size: 14px; padding: 7px 14px; border: 1px solid var(--rule); background: var(--surface); color: var(--muted); border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--carbon); color: var(--carbon); background: var(--carbon-soft); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 28px 22px; }
+.card { display: flex; flex-direction: column; gap: 12px; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.card .thumb { aspect-ratio: 3 / 4; overflow: hidden; background: var(--surface); border: 1px solid var(--rule); box-shadow: 0 10px 24px rgba(15,17,22,0.08); }
+.card .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 500ms ease; }
+.card:hover .thumb img { transform: scale(1.04) rotate(-0.6deg); }
+.card .code { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--carbon); }
+.card h3 { font-size: 26px; line-height: 1.05; }
+.card .when { font-size: 14px; color: var(--muted); }
+.empty { color: var(--muted); padding: 24px 0; }
+.scan.card { background: var(--surface); padding: 12px; border: 1px solid var(--rule); box-shadow: 0 24px 60px rgba(15,17,22,0.14); }
+.prose { max-width: 680px; display: flex; flex-direction: column; gap: 18px; }
+.prose h3 { font-size: 36px; margin-top: 24px; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); position: sticky; top: 0; background: var(--surface); }
+td.code { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; color: var(--carbon); }
+td.num { font-variant-numeric: tabular-nums; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--carbon-soft); }
+
+/* Visualizador */
+.viewer { position: fixed; inset: 0; z-index: 50; background: rgba(8,9,12,0.94); display: none; }
+.viewer.open { display: grid; grid-template-columns: 1fr 380px; }
+.viewer .stage { display: flex; align-items: center; justify-content: center; padding: 28px; min-height: 0; position: relative; }
+.viewer .stage img { max-height: calc(100vh - 130px); max-width: 100%; width: auto; height: auto; background: #fff; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.viewer .pager { position: absolute; bottom: 22px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; align-items: center; color: #E8E8E8; font-family: var(--font-mono); font-size: 13px; }
+.btn { font: inherit; font-family: var(--font-body); font-size: 15px; padding: 9px 16px; border-radius: 999px; border: 1px solid #555A66; background: #1F222A; color: #F0F0F0; cursor: pointer; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+.viewer aside { background: var(--surface); color: var(--ink); padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.viewer aside h2 { font-size: 44px; }
+.viewer dl { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 8px 12px; font-size: 15px; border-top: 1px solid var(--rule); padding-top: 16px; }
+.viewer dt { color: var(--muted); }
+.viewer dd { margin: 0; }
+.viewer .close { align-self: flex-end; background: transparent; color: var(--ink); border-color: var(--rule); }
+
+footer { border-top: 1px solid var(--rule); padding: 36px 0 56px; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 900px) {
+  .night .grid2, .poet, .duo, .with-photo, .band, .quote-band .qgrid { grid-template-columns: 1fr; }
+  .with-photo .side { position: static; max-width: 420px; }
+  .hero { min-height: 640px; align-items: flex-end; }
+  .hero > img { object-position: 60% 15%; }
+  .hero::after { background: linear-gradient(0deg, rgba(18,20,25,0.97) 0%, rgba(18,20,25,0.88) 42%, rgba(18,20,25,0.1) 78%); }
+  .chapter .head { grid-template-columns: 1fr; gap: 12px; }
+  .timeline { margin-left: 0; }
+  .tl .yr { position: static; text-align: left; width: auto; font-size: 32px; }
+  .numbers { grid-template-columns: repeat(2, 1fr); }
+  .numbers div:nth-child(2) { border-right: 0; }
+  .explore { grid-template-columns: repeat(2, 1fr); }
+  .viewer.open { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .viewer aside { max-height: 42vh; }
+  .viewer .stage img { max-height: calc(58vh - 80px); }
+  nav.tabs { max-width: 60vw; }
+}
+@media (max-width: 480px) { .explore { grid-template-columns: 1fr; } .toolbar input { min-width: 0; width: 100%; } .brand { font-size: 20px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { transition: none; } .reveal.pending { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<header class="top" id="topbar">
+<div class="wrap">
+<a class="brand" href="#inicio">Rosy de Sá Cardoso</a>
+<nav class="tabs" aria-label="Seções do acervo">
+<a href="#inicio">Início</a>
+<a href="#poemas">Poemas</a>
+<a href="#contos">Contos</a>
+<a href="#documentos">Documentos</a>
+<a href="#outros">Outros</a>
+<a href="#tombamento">Tombamento</a>
+<a href="#projeto">O projeto</a>
+</nav>
+</div>
+</header>
+
+<main>
+<section class="view" id="v-inicio">
+
+<div class="hero">
+<img src="img/rosy-entrevista.jpg" alt="Rosy de Sá Cardoso, de cabelos brancos e brinco azul, falando em entrevista">
+<div class="wrap">
+<div class="copy">
+<p class="mono reveal" style="color:#E8A88E;">Acervo digital · 1948–2008</p>
+<h1 class="reveal" style="--d:120ms;">Rosy de Sá <em>Cardoso</em></h1>
+<p class="sub reveal" style="--d:240ms;">Primeira mulher com registro de jornalista no Paraná. Servidora pública. Poetisa. Os textos que ela guardou para si, tombados e digitalizados.</p>
+<a class="cue reveal" style="--d:360ms;" href="#capa" data-scroll><span class="line"></span>Começar pela capa</a>
+</div>
+</div>
+</div>
+
+<div class="night" id="capa">
+<div class="wrap grid2">
+<div>
+<p class="mono reveal">ROSI-050 · Capa manuscrita</p>
+<p class="typed" id="typed" aria-label="Ler depois de minha morte.">Ler depois de minha morte.<span class="caret"></span></p>
+<p class="body reveal">Assim Rosy escreveu, à mão, na capa que guardava parte deste material. E acrescentou: “Jogar fora sem ler.” Rosy morreu em 2022. Lemos. Encontramos a jornalista, a servidora e, sobretudo, a poetisa.</p>
+</div>
+<img class="capa reveal" style="--d:200ms;" src="img/ROSI-050_p01.jpg" alt="Capa de papel amarelado com a inscrição à mão: Ler depois de minha morte. Rosy. (Jogar fora sem ler)">
+</div>
+</div>
+
+<div class="chapter">
+<div class="wrap">
+<div class="head"><p class="mono muted reveal">Quem foi</p><h2 class="reveal">Uma vida em papel</h2></div>
+<div class="with-photo">
+<div class="timeline">
+<div class="tl reveal"><span class="yr">1926</span><p>Nasce em Curitiba.</p></div>
+<div class="tl reveal"><span class="yr">Anos 1940</span><p>Começa a trabalhar na Prefeitura de Curitiba. Em 1961, diria estar ali havia cerca de 15 anos.</p></div>
+<div class="tl reveal"><span class="yr">Fim dos 1940</span><p>Torna-se a primeira mulher com registro profissional de jornalista no Paraná, o registro nº 6.</p></div>
+<div class="tl reveal"><span class="yr">1948–1952</span><p>Escreve a maior parte dos poemas do acervo, datilografados, datados e assinados em Curitiba.</p></div>
+<div class="tl reveal"><span class="yr">1951</span><p>Em Recife, no IV Congresso Nacional de Jornalistas, recebe versos de Adauto Gondim.</p></div>
+<div class="tl reveal"><span class="yr">1962</span><p>Assume a chefia do Serviço de Relações Públicas da Prefeitura.</p></div>
+<div class="tl reveal"><span class="yr">1963</span><p>Escreve, com Celina Silveira Luz, “A Mulher e o Jornalismo”.</p></div>
+<div class="tl reveal"><span class="yr">1968</span><p>Publica em O Estado do Paraná a reportagem “Se eu pudesse falar...”.</p></div>
+<div class="tl reveal"><span class="yr">2022</span><p>Morre, depois de seis décadas em redações de Curitiba, as últimas quatro na Gazeta do Povo.</p></div>
+</div>
+<figure class="photo side reveal"><img src="img/rosy-brincos.jpg" alt="Rosy de Sá Cardoso com brincos de argola e blusa estampada, em imagem de vídeo"><figcaption>Rosy em imagem de vídeo de arquivo.</figcaption></figure>
+</div>
+</div>
+</div>
+
+<div class="wrap band">
+<figure class="photo reveal"><img src="img/rosy-redacao.jpg" alt="Rosy de Sá Cardoso, de óculos e cachecol azul, digitando em um computador numa redação"><figcaption>Rosy na redação.</figcaption></figure>
+<div>
+<p class="mono muted reveal">Seis décadas</p>
+<h2 class="reveal" style="margin-top:14px;">Uma vida na redação</h2>
+<p class="lead reveal" style="margin-top:24px;">Rosy trabalhou em jornais de Curitiba por cerca de sessenta anos, as últimas quatro décadas na Gazeta do Povo. Ainda assim, quase nada desse jornalismo está no acervo que ela guardou.</p>
+</div>
+</div>
+<div class="wrap">
+<div class="numbers">
+<div class="reveal"><b data-count="51">51</b><span class="muted">itens tombados</span></div>
+<div class="reveal" style="--d:100ms;"><b data-count="100">100</b><span class="muted">páginas digitalizadas</span></div>
+<div class="reveal" style="--d:200ms;"><b data-count="34">34</b><span class="muted">poemas</span></div>
+<div class="reveal" style="--d:300ms;"><b data-count="60">60</b><span class="muted">anos de escrita, de 1948 a 2008</span></div>
+</div>
+</div>
+
+<div class="chapter">
+<div class="wrap poet">
+<div>
+<p class="mono muted reveal">A maior descoberta</p>
+<h2 class="reveal" style="margin-top:16px;">Rosy era <em>poetisa.</em></h2>
+<p class="lead reveal" style="margin-top:28px;">34 poemas, quase todos escritos entre 1948 e 1952, quando ela tinha pouco mais de 20 anos. Amor, desejo, solidão, desilusão e a própria condição de mulher.</p>
+<div class="titles reveal" aria-label="Alguns títulos de poemas">
+<span class="on">Desejo</span><span>Solidão</span><span class="on">Súplica</span><span>Insônia</span><span>Noite de chuva</span><span class="on">Primeira desilusão</span><span>Interrogação</span><span>Ventura</span><span class="on">Como é bom ser mulher!</span><span>Se eu pudesse</span><span>Estar longe...</span><span class="on">Volviste hacia mí</span>
+</div>
+</div>
+<button class="scan reveal card" data-code="ROSI-022" style="--d:200ms; padding:12px;" aria-label="Abrir o poema Desejo"><img src="img/ROSI-022_p01.jpg" alt="Poema datilografado Desejo, 25 de novembro de 1952, assinado por Rosy"></button>
+</div>
+</div>
+
+<div class="quote-band">
+<div class="wrap qgrid">
+<div>
+<blockquote class="reveal">Rosy nunca se casou, num tempo que via isso como algo ruim. Seguiu sozinha e permaneceu um enigma.</blockquote>
+<cite class="reveal" style="--d:150ms;">Os poemas, escritos em primeira pessoa, deixam ver uma vida íntima que ela não expôs publicamente.</cite>
+</div>
+<figure class="photo reveal" style="--d:200ms;"><img src="img/rosy-sorriso.jpg" alt="Rosy de Sá Cardoso, já idosa, sorrindo, com brincos brancos e colar de pérolas"><figcaption>Rosy de Sá Cardoso.</figcaption></figure>
+</div>
+</div>
+
+<div class="chapter">
+<div class="wrap">
+<div class="head"><p class="mono muted reveal">Na cidade</p><h2 class="reveal">A servidora e a jornalista</h2></div>
+<figure class="photo reveal" style="margin-bottom:64px; max-width:760px;"><img src="img/rosy-grupo.jpg" alt="Foto em sépia: Rosy de Sá Cardoso ao centro, entre cinco homens de terno"><figcaption>Rosy, ao centro, entre cinco homens de terno.</figcaption></figure>
+<div class="duo">
+<article class="reveal">
+<button class="scan card" data-code="ROSI-040" aria-label="Abrir o relatório de 1962"><img src="img/ROSI-040_p01.jpg" alt="Primeira página do relatório do Serviço de Relações Públicas, 1962" style="max-height:520px; width:100%; object-fit:cover; object-position:top;"></button>
+<h3>Na Prefeitura</h3>
+<p class="muted">Chefe do Serviço de Relações Públicas a partir de 1962, Rosy criticou o uso de carros oficiais e os “auxílios” pagos a jornalistas, e intermediou o tombamento do bebedouro da praça Coronel Enéas.</p>
+</article>
+<article class="reveal" style="--d:150ms;">
+<button class="scan card" data-code="ROSI-045" aria-label="Abrir A Mulher e o Jornalismo"><img src="img/ROSI-045_p01.jpg" alt="Primeira página de A Mulher e o Jornalismo, 1963" style="max-height:520px; width:100%; object-fit:cover; object-position:top;"></button>
+<h3>A Mulher e o Jornalismo</h3>
+<p class="muted">Em 1963, com Celina Silveira Luz, perguntou por que as mulheres eram julgadas capazes apenas de escrever crônicas sociais ou de moda, e defendeu as mesmas oportunidades nas redações.</p>
+</article>
+</div>
+</div>
+</div>
+
+<div class="chapter" style="padding-top:40px;">
+<div class="wrap">
+<div class="band" style="padding-top:0;">
+<div>
+<p class="mono muted reveal">O acervo</p>
+<h2 class="reveal" style="margin-top:14px;">Lemos. Agora está aqui.</h2>
+<p class="lead reveal" style="margin-top:24px;">51 itens, todos digitalizados. Escolha um bloco para começar.</p>
+</div>
+<figure class="photo reveal"><img src="img/rosy-mapa.jpg" alt="Rosy de Sá Cardoso, sorrindo, aponta para um mapa-múndi na parede"><figcaption>Rosy diante de um mapa-múndi.</figcaption></figure>
+</div>
+<div class="explore">
+<a class="reveal" href="#poemas"><img src="thumb/ROSI-022.jpg" alt=""><b>Poemas</b><span>34 itens · 37 páginas</span></a>
+<a class="reveal" style="--d:100ms;" href="#contos"><img src="thumb/ROSI-002.jpg" alt=""><b>Contos</b><span>3 itens · 8 páginas</span></a>
+<a class="reveal" style="--d:200ms;" href="#documentos"><img src="thumb/ROSI-041.jpg" alt=""><b>Documentos oficiais</b><span>5 itens · 34 páginas</span></a>
+<a class="reveal" style="--d:300ms;" href="#outros"><img src="thumb/ROSI-047.jpg" alt=""><b>Outros</b><span>Crônicas, reportagem e mais</span></a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="view page" id="v-poemas"><div class="wrap">
+<div class="section-head"><p class="mono muted">ROSI-004 a ROSI-037</p><h2>Poemas</h2><p class="lede">34 poemas, 30 em português e 4 em espanhol. A maioria foi escrita entre 1948 e 1952 e traz local e data datilografados ao final.</p></div>
+<div class="toolbar"><input type="search" id="q-poemas" placeholder="Buscar por título ou data" aria-label="Buscar poemas"><button class="chip" data-filter="com" aria-pressed="false">Com data</button><button class="chip" data-filter="sem" aria-pressed="false">Sem data</button></div>
+<div class="grid" id="g-poemas"></div>
+</div></section>
+
+<section class="view page" id="v-contos"><div class="wrap">
+<div class="section-head"><p class="mono muted">ROSI-001 a ROSI-003</p><h2>Contos</h2><p class="lede">Três contos sem data, todos com mulheres no centro da história.</p></div>
+<div class="grid" id="g-contos"></div>
+</div></section>
+
+<section class="view page" id="v-documentos"><div class="wrap">
+<div class="section-head"><p class="mono muted">ROSI-038 a ROSI-042</p><h2>Documentos oficiais</h2><p class="lede">Proposta, relatórios e cartas ligados à Prefeitura de Curitiba entre 1961 e 1963, quando Rosy chefiou o Serviço de Relações Públicas.</p></div>
+<div class="grid" id="g-documentos"></div>
+</div></section>
+
+<section class="view page" id="v-outros"><div class="wrap">
+<div class="section-head"><p class="mono muted">ROSI-043 a ROSI-051</p><h2>Outros</h2><p class="lede">Crônicas, a única reportagem do acervo, dois trabalhos para encontros de jornalistas, um bilhete, um texto confessional e a capa “Ler depois de minha morte”.</p></div>
+<div class="grid" id="g-outros"></div>
+</div></section>
+
+<section class="view page" id="v-tombamento"><div class="wrap">
+<div class="section-head"><p class="mono muted">Quadro geral</p><h2>Tombamento</h2><p class="lede">Os 51 itens, ordenados por tipo e, dentro de cada tipo, por data. Os sem data ficam no fim de cada bloco. Clique numa linha para ver o documento.</p></div>
+<div class="toolbar"><input type="search" id="q-tombo" placeholder="Buscar em todo o quadro" aria-label="Buscar no quadro de tombamento"></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Nº de tombo</th><th>Tipo</th><th>Título</th><th>Págs.</th><th>Data</th><th>Suporte</th><th>Escrita</th></tr></thead>
+<tbody id="t-tombo"></tbody>
+</table></div>
+</div></section>
+
+<section class="view page" id="v-projeto"><div class="wrap">
+<div class="section-head"><p class="mono muted">O projeto</p><h2>Sobre este acervo digital</h2></div>
+<div class="prose">
+<p>Este site reúne o acervo pessoal de Rosy de Sá Cardoso, sob custódia privada, identificado por meio do professor José Carlos Fernandes. O material estava em duas pastas de papel, guardadas dentro de uma pasta maior de plástico.</p>
+<p>O trabalho foi feito para a disciplina optativa Violência Arquivística. Seguimos a análise de conteúdo de Laurence Bardin, a partir da leitura flutuante: um primeiro contato com todo o material, sem categorias prévias. Depois, separamos os textos por tipo e fizemos o tombamento.</p>
+<h3>Critérios</h3>
+<p>Cada texto recebeu um número de tombo, de ROSI-001 a ROSI-051, mesmo os que têm várias páginas. A ordem é por tipo de texto e, dentro de cada tipo, por data, da mais antiga para a mais nova. As 13 cópias em carbono ou digitalizações repetidas não receberam número próprio. As páginas foram digitalizadas com o aplicativo CamScanner, em JPG.</p>
+<h3>Datas</h3>
+<p>Dos 51 itens, 33 têm o ano indicado no documento ou estimado a partir dele. Algumas datas foram deduzidas: o ano da reportagem foi lido como 1968 porque o cabeçalho diz “Sábado, 13 de janeiro”, e 13 de janeiro caiu num sábado em 1968, não em 1966.</p>
+<h3>Uma nota sobre a capa</h3>
+<p>Parte do material estava guardada sob uma capa com a inscrição “Ler depois de minha morte. Rosy. (Jogar fora sem ler)”. Publicar este acervo é também responder a esse pedido: escolhemos preservar e tornar legível uma produção que, de outro modo, poderia se perder.</p>
+<h3>Equipe</h3>
+<p>Discentes: Isabelle Hoffmann e Nicole Ribeiro.<br>Docentes: José Carlos Fernandes e Myrian Regina del Vecchio de Lima.</p>
+</div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Acervo Rosy de Sá Cardoso · Relatório de tombamento · Optativa Violência Arquivística</div></footer>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vw-title">
+<div class="stage">
+<img id="vw-img" alt="">
+<div class="pager"><button class="btn" id="vw-prev" aria-label="Página anterior">← Anterior</button><span id="vw-count"></span><button class="btn" id="vw-next" aria-label="Próxima página">Próxima →</button></div>
+</div>
+<aside>
+<button class="btn close" id="vw-close">Fechar</button>
+<p class="mono" id="vw-code" style="color:var(--carbon);"></p>
+<h2 id="vw-title"></h2>
+<p id="vw-obs"></p>
+<dl id="vw-meta"></dl>
+</aside>
+</div>
+
+<script>
+const ITEMS=[{"code": "ROSI-001", "tipo": "Conto", "titulo": "Felicidade", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-001_p01.jpg"], "obs": "Manuscrito a lápis. Prosa curta sobre uma jovem, com o refrão “Ela era jovem. E era bonita.”"}, {"code": "ROSI-002", "tipo": "Conto", "titulo": "Mistério", "data": "Sem data", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-002_p01.jpg", "ROSI-002_p02.jpg", "ROSI-002_p03.jpg", "ROSI-002_p04.jpg"], "obs": "Conto de mistério: Adelia e a filha pequena, Angelita, convivem com o retrato e o segredo da avó Angela. Traz o endereço de Rosy como remetente e tem cópias em carbono."}, {"code": "ROSI-003", "tipo": "Conto", "titulo": "Mulher", "data": "Sem data", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-003_p01.jpg", "ROSI-003_p02.jpg", "ROSI-003_p03.jpg"], "obs": "Rita, lavadeira pobre que cria o filho sozinha, redescobre a própria beleza. O final pode estar incompleto."}, {"code": "ROSI-004", "tipo": "Poema", "titulo": "Creiste (em espanhol)", "data": "05/1948", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-004_p01.jpg"], "obs": "Poema em espanhol."}, {"code": "ROSI-005", "tipo": "Poema", "titulo": "Volviste hacia mí (em espanhol)", "data": "05/1948", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-005_p01.jpg"], "obs": "Poema em espanhol."}, {"code": "ROSI-006", "tipo": "Poema", "titulo": "¿Qué hacer? (em espanhol)", "data": "30/08/1948", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-006_p01.jpg"], "obs": "Poema em prosa, em espanhol, manuscrito."}, {"code": "ROSI-007", "tipo": "Poema", "titulo": "Minha página", "data": "1948", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-007_p01.jpg"], "obs": ""}, {"code": "ROSI-008", "tipo": "Poema", "titulo": "A razão", "data": "02/1951", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-008_p01.jpg"], "obs": ""}, {"code": "ROSI-009", "tipo": "Poema", "titulo": "Quadras de Adauto Gondim (autoria de terceiro, dedicadas a Rosy)", "data": "05/1951", "suporte": "Folha de caderno espiral", "escrita": "Manuscrito", "paginas": ["ROSI-009_p01.jpg"], "obs": "Versos escritos por Adauto Gondim e dedicados a Rosy em Recife, durante o IV Congresso Nacional de Jornalistas (5 a 12 de maio de 1951). Autoria de terceiro."}, {"code": "ROSI-010", "tipo": "Poema", "titulo": "Viver", "data": "06/1951", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-010_p01.jpg"], "obs": ""}, {"code": "ROSI-011", "tipo": "Poema", "titulo": "Vida virtuosa", "data": "06/1951", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-011_p01.jpg"], "obs": ""}, {"code": "ROSI-012", "tipo": "Poema", "titulo": "Nada", "data": "08/1951", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-012_p01.jpg"], "obs": ""}, {"code": "ROSI-013", "tipo": "Poema", "titulo": "Solidão", "data": "08/1951", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-013_p01.jpg"], "obs": ""}, {"code": "ROSI-014", "tipo": "Poema", "titulo": "Solidão a dois", "data": "03/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-014_p01.jpg"], "obs": ""}, {"code": "ROSI-015", "tipo": "Poema", "titulo": "Interrogação (resposta a A.G.A.)", "data": "20/03/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-015_p01.jpg"], "obs": "Poema em resposta a A.G.A."}, {"code": "ROSI-016", "tipo": "Poema", "titulo": "Amor", "data": "24/03/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-016_p01.jpg"], "obs": ""}, {"code": "ROSI-017", "tipo": "Poema", "titulo": "Estar longe...", "data": "22/07/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-017_p01.jpg"], "obs": ""}, {"code": "ROSI-018", "tipo": "Poema", "titulo": "Insônia", "data": "30/07/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-018_p01.jpg"], "obs": ""}, {"code": "ROSI-019", "tipo": "Poema", "titulo": "Noite de chuva", "data": "11/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-019_p01.jpg"], "obs": ""}, {"code": "ROSI-020", "tipo": "Poema", "titulo": "Ciranda, cirandinha (I)", "data": "11/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-020_p01.jpg"], "obs": "Primeira de duas versões."}, {"code": "ROSI-021", "tipo": "Poema", "titulo": "Ciranda, cirandinha (II)", "data": "11/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-021_p01.jpg"], "obs": "Segunda de duas versões."}, {"code": "ROSI-022", "tipo": "Poema", "titulo": "Desejo", "data": "25/11/1952", "suporte": "Folha avulsa", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-022_p01.jpg"], "obs": "Datilografado e assinado à mão. Há uma versão anterior, “Se você soubesse...” (ROSI-034)."}, {"code": "ROSI-023", "tipo": "Poema", "titulo": "Súplica", "data": "25/11/1952", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-023_p01.jpg"], "obs": ""}, {"code": "ROSI-024", "tipo": "Poema", "titulo": "Você", "data": "19/01/1962", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-024_p01.jpg"], "obs": ""}, {"code": "ROSI-025", "tipo": "Poema", "titulo": "Para as primas voadoras", "data": "21/10/1982", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-025_p01.jpg"], "obs": "Poema de família, com a nota “Lembrança do lanche em casa da Eza”."}, {"code": "ROSI-026", "tipo": "Poema", "titulo": "Como é bom ser mulher!", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-026_p01.jpg"], "obs": ""}, {"code": "ROSI-027", "tipo": "Poema", "titulo": "Dor", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-027_p01.jpg"], "obs": ""}, {"code": "ROSI-028", "tipo": "Poema", "titulo": "Escolha difícil", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-028_p01.jpg"], "obs": ""}, {"code": "ROSI-029", "tipo": "Poema", "titulo": "Mi secreto (em espanhol, prosa poética)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-029_p01.jpg"], "obs": "Prosa poética em espanhol."}, {"code": "ROSI-030", "tipo": "Poema", "titulo": "Primeira desilusão (prosa poética)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-030_p01.jpg"], "obs": "Prosa poética."}, {"code": "ROSI-031", "tipo": "Poema", "titulo": "Que maldade desta gente (sátira)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-031_p01.jpg"], "obs": "Versos satíricos sobre um episódio no Departamento Jurídico da Prefeitura."}, {"code": "ROSI-032", "tipo": "Poema", "titulo": "Rosyadas (sátira)", "data": "Sem data", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-032_p01.jpg", "ROSI-032_p02.jpg", "ROSI-032_p03.jpg"], "obs": "Versos satíricos sobre colegas do Departamento Jurídico, escritos quando Rosy esperava a assinatura da aposentadoria."}, {"code": "ROSI-033", "tipo": "Poema", "titulo": "Se eu pudesse", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-033_p01.jpg"], "obs": ""}, {"code": "ROSI-034", "tipo": "Poema", "titulo": "Se você soubesse... (versão anterior de \"Desejo\")", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-034_p01.jpg"], "obs": "Versão anterior de “Desejo” (ROSI-022)."}, {"code": "ROSI-035", "tipo": "Poema", "titulo": "Tristeza", "data": "28/12, sem ano", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-035_p01.jpg"], "obs": "Traz apenas o dia e o mês."}, {"code": "ROSI-036", "tipo": "Poema", "titulo": "Tu estranhas eu perguntar (fragmento, sem título)", "data": "Sem data", "suporte": "Fragmento de papel", "escrita": "Datilografado", "paginas": ["ROSI-036_p01.jpg"], "obs": "Fragmento sem título."}, {"code": "ROSI-037", "tipo": "Poema", "titulo": "Ventura (dois rascunhos)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-037_p01.jpg", "ROSI-037_p02.jpg"], "obs": "Dois rascunhos a lápis do mesmo poema."}, {"code": "ROSI-038", "tipo": "Documento oficial", "titulo": "Proposta de organização do Serviço de Relações Públicas da Prefeitura de Curitiba (com questionário; faltam Fl.4 e Fl.5)", "data": "12/1961", "suporte": "Conjunto grampeado", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-038_p01.jpg", "ROSI-038_p02.jpg", "ROSI-038_p03.jpg", "ROSI-038_p04.jpg", "ROSI-038_p05.jpg", "ROSI-038_p06.jpg", "ROSI-038_p07.jpg", "ROSI-038_p08.jpg", "ROSI-038_p09.jpg", "ROSI-038_p10.jpg", "ROSI-038_p11.jpg", "ROSI-038_p12.jpg", "ROSI-038_p13.jpg", "ROSI-038_p14.jpg"], "obs": "Proposta de criação do Serviço de Relações Públicas da Prefeitura, com carta de apresentação ao prefeito e questionário para funcionários. Faltam as folhas 4 e 5."}, {"code": "ROSI-039", "tipo": "Documento oficial", "titulo": "Carta do Gabinete do Governador Ney Braga a Rosy (recebida)", "data": "10/04/1962", "suporte": "Folha avulsa, papel timbrado", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-039_p01.jpg"], "obs": "Carta recebida. Laerzio Campelli, do Departamento de Turismo e Divulgação, agradece a ajuda de Rosy na recepção à jornalista Lucy Bloch."}, {"code": "ROSI-040", "tipo": "Documento oficial", "titulo": "Relatório do Serviço de Relações Públicas nº EAR.38/62 ao prefeito Iberê de Mattos", "data": "13/10/1962", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-040_p01.jpg", "ROSI-040_p02.jpg", "ROSI-040_p03.jpg", "ROSI-040_p04.jpg", "ROSI-040_p05.jpg"], "obs": "Relatório EAR.38/62 ao prefeito Iberê de Mattos sobre as atividades do Serviço de Relações Públicas em 1962, incluindo o tombamento do bebedouro da praça Coronel Enéas."}, {"code": "ROSI-041", "tipo": "Documento oficial", "titulo": "Carta \"Senhor Prefeito\" ao novo prefeito", "data": "10/1962 (estimada)", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-041_p01.jpg", "ROSI-041_p02.jpg", "ROSI-041_p03.jpg", "ROSI-041_p04.jpg", "ROSI-041_p05.jpg", "ROSI-041_p06.jpg", "ROSI-041_p07.jpg"], "obs": "Carta ao futuro prefeito com críticas ao uso de carros oficiais, às gratificações, ao descumprimento do Código de Posturas e aos “auxílios” a jornalistas. Data estimada pelo conteúdo."}, {"code": "ROSI-042", "tipo": "Documento oficial", "titulo": "Relatório da IV Conferência Interamericana de Relações Públicas ao prefeito Ivo Arzua Pereira", "data": "15/10/1963", "suporte": "Conjunto grampeado", "escrita": "Datilografado", "paginas": ["ROSI-042_p01.jpg", "ROSI-042_p02.jpg", "ROSI-042_p03.jpg", "ROSI-042_p04.jpg", "ROSI-042_p05.jpg", "ROSI-042_p06.jpg", "ROSI-042_p07.jpg"], "obs": "Relatório ao prefeito Ivo Arzua Pereira sobre a IV Conferência Interamericana de Relações Públicas, em que Rosy representou a Prefeitura."}, {"code": "ROSI-043", "tipo": "Outros", "titulo": "La Vida (crônica em espanhol)", "data": "23/09/194? (ano incompleto)", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-043_p01.jpg"], "obs": "Crônica em espanhol. O último algarismo do ano está ilegível."}, {"code": "ROSI-044", "tipo": "Outros", "titulo": "Não sei... não sei... (texto confessional)", "data": "15/05/1948", "suporte": "Folha avulsa", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-044_p01.jpg"], "obs": "Texto confessional, datado e assinado “Rosy” à mão."}, {"code": "ROSI-045", "tipo": "Outros", "titulo": "Proposição \"A Mulher e o Jornalismo\" (com Celina Silveira Luz)", "data": "04/1963", "suporte": "Conjunto grampeado", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-045_p01.jpg", "ROSI-045_p02.jpg", "ROSI-045_p03.jpg", "ROSI-045_p04.jpg"], "obs": "Escrita com Celina Silveira Luz para o II Congresso de Jornalistas Paranaenses. Critica a exclusão das mulheres das redações."}, {"code": "ROSI-046", "tipo": "Outros", "titulo": "\"Relações Públicas e Jornalismo\" (III Encontro dos Jornalistas Profissionais do Paraná)", "data": "04/1964", "suporte": "Conjunto grampeado", "escrita": "Misto (datilografado e à mão)", "paginas": ["ROSI-046_p01.jpg", "ROSI-046_p02.jpg", "ROSI-046_p03.jpg", "ROSI-046_p04.jpg", "ROSI-046_p05.jpg", "ROSI-046_p06.jpg", "ROSI-046_p07.jpg", "ROSI-046_p08.jpg", "ROSI-046_p09.jpg", "ROSI-046_p10.jpg"], "obs": "Trabalho apresentado no III Encontro dos Jornalistas Profissionais do Paraná (Maringá, maio de 1964). Rosy se apresenta como jornalista há 14 anos."}, {"code": "ROSI-047", "tipo": "Outros", "titulo": "Reportagem \"Se eu pudesse falar...\", O Estado do Paraná", "data": "13/01/1968", "suporte": "Recorte de jornal", "escrita": "Impresso, com anotação à mão", "paginas": ["ROSI-047_p01.jpg"], "obs": "Publicada em O Estado do Paraná, 10ª página, e narrada por um caminhão. O ano foi lido como 1968 pelo dia da semana do cabeçalho."}, {"code": "ROSI-048", "tipo": "Outros", "titulo": "Bilhete recebido, assinado \"Eunice\"", "data": "07/2008", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-048_p01.jpg"], "obs": "Bilhete recebido por Rosy, assinado “Eunice” (leitura incerta), sobre uma matéria de J.C. Fernandes com a biografia dela."}, {"code": "ROSI-049", "tipo": "Outros", "titulo": "A janela (\"Todos os dias, durante seis horas...\", crônica)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Manuscrito", "paginas": ["ROSI-049_p01.jpg"], "obs": "Crônica manuscrita a lápis, com muitas correções: “Todos os dias, durante seis horas...”."}, {"code": "ROSI-050", "tipo": "Outros", "titulo": "Capa com a inscrição \"Ler depois de minha morte\"", "data": "Sem data", "suporte": "Capa de papel", "escrita": "Manuscrito", "paginas": ["ROSI-050_p01.jpg"], "obs": "Capa manuscrita: “Ler depois de minha morte. Rosy. (Jogar fora sem ler)”."}, {"code": "ROSI-051", "tipo": "Outros", "titulo": "\"Última Página\" (crônica para o programa de rádio Bom dia, Paraná!)", "data": "Sem data", "suporte": "Folha avulsa", "escrita": "Datilografado", "paginas": ["ROSI-051_p01.jpg"], "obs": "Crônica escrita para o programa de rádio “Bom dia, Paraná!”."}];
+const SECTIONS = { 'Poema':'poemas', 'Conto':'contos', 'Documento oficial':'documentos', 'Outros':'outros' };
+const VIEWS = ['inicio','poemas','contos','documentos','outros','tombamento','projeto'];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const semData = it => /^Sem data/.test(it.data) || /sem ano/.test(it.data);
+const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function card(it) {
+  const n = it.paginas.length;
+  return `<button class="card reveal" data-code="${it.code}"><div class="thumb"><img loading="lazy" src="thumb/${it.code}.jpg" alt=""></div>
+  <span class="code">${it.code}</span><h3>${esc(it.titulo)}</h3><span class="when">${esc(it.data)} · ${n} ${n > 1 ? 'páginas' : 'página'}</span></button>`;
+}
+const bySec = {};
+ITEMS.forEach(it => { (bySec[SECTIONS[it.tipo]] ||= []).push(it); });
+function renderGrid(sec, list) {
+  $('#g-' + sec).innerHTML = list.length ? list.map(card).join('') : '<p class="empty">Nenhum item encontrado.</p>';
+  armReveals($('#g-' + sec));
+}
+let poemFilter = null;
+function filterPoemas() {
+  const q = $('#q-poemas').value.toLowerCase().trim();
+  renderGrid('poemas', bySec.poemas.filter(it =>
+    (!q || (it.titulo + ' ' + it.data + ' ' + it.code).toLowerCase().includes(q)) &&
+    (!poemFilter || (poemFilter === 'sem' ? semData(it) : !semData(it)))));
+}
+$('#q-poemas').addEventListener('input', filterPoemas);
+document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+  const f = b.dataset.filter; poemFilter = poemFilter === f ? null : f;
+  document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.filter === poemFilter)));
+  filterPoemas();
+}));
+function renderTable() {
+  const q = $('#q-tombo').value.toLowerCase().trim();
+  const rows = ITEMS.filter(it => !q || Object.values(it).join(' ').toLowerCase().includes(q));
+  $('#t-tombo').innerHTML = rows.map(it => `<tr data-code="${it.code}" tabindex="0"><td class="code">${it.code}</td><td>${esc(it.tipo)}</td><td>${esc(it.titulo)}</td><td class="num">${it.paginas.length}</td><td>${esc(it.data)}</td><td>${esc(it.suporte)}</td><td>${esc(it.escrita)}</td></tr>`).join('');
+}
+$('#q-tombo').addEventListener('input', renderTable);
+
+/* Revelação ao rolar: só esconde o que ainda está abaixo da tela */
+const io = ('IntersectionObserver' in window && motionOK) ? new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pending'); io.unobserve(e.target); onShow(e.target); } });
+}, { rootMargin: '0px 0px -8% 0px' }) : null;
+function armReveals(root) {
+  root.querySelectorAll('.reveal').forEach(el => {
+    if (!io) { onShow(el); return; }
+    const r = el.getBoundingClientRect();
+    if (r.top > window.innerHeight * 0.92) { el.classList.add('pending'); io.observe(el); } else onShow(el);
+  });
+}
+function onShow(el) {
+  el.querySelectorAll?.('[data-count]').forEach(countUp);
+  if (el.matches?.('[data-count]')) countUp(el);
+}
+
+/* Contagem dos números */
+function countUp(el) {
+  if (!motionOK || el.dataset.done) return; el.dataset.done = 1;
+  const to = +el.dataset.count, t0 = performance.now(), dur = 1400;
+  const step = t => { const k = Math.min(1, (t - t0) / dur); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+
+/* A frase da capa, datilografada letra a letra quando aparece */
+(function () {
+  const el = $('#typed'); if (!el || !motionOK || !('IntersectionObserver' in window)) return;
+  const text = 'Ler depois de minha morte.';
+  const caret = '<span class="caret"></span>';
+  let started = false;
+  new IntersectionObserver((en, obs) => {
+    if (!en[0].isIntersecting || started) return; started = true; obs.disconnect();
+    let i = 0; el.innerHTML = caret;
+    const tick = () => { i++; el.innerHTML = esc(text.slice(0, i)) + caret; if (i < text.length) setTimeout(tick, text[i - 1] === ' ' ? 120 : 70 + Math.random() * 60); };
+    setTimeout(tick, 400);
+  }, { threshold: 0.5 }).observe(el);
+})();
+
+/* Barra que ganha fundo ao rolar */
+function onScroll() { $('#topbar').classList.toggle('solid', true); }
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* Visualizador */
+let cur = null, page = 0, lastView = 'inicio';
+function openItem(code) {
+  const it = ITEMS.find(x => x.code === code); if (!it) return;
+  cur = it; page = 0;
+  $('#vw-code').textContent = it.code + ' · ' + it.tipo;
+  $('#vw-title').textContent = it.titulo;
+  $('#vw-obs').textContent = it.obs || '';
+  $('#vw-meta').innerHTML = `<dt>Data</dt><dd>${esc(it.data)}</dd><dt>Páginas</dt><dd>${it.paginas.length}</dd><dt>Suporte</dt><dd>${esc(it.suporte)}</dd><dt>Escrita</dt><dd>${esc(it.escrita)}</dd>`;
+  showPage(); $('#viewer').classList.add('open'); $('#vw-close').focus();
+}
+function showPage() {
+  const n = cur.paginas.length;
+  $('#vw-img').src = 'img/' + cur.paginas[page];
+  $('#vw-img').alt = `${cur.titulo}, página ${page + 1} de ${n}`;
+  $('#vw-count').textContent = `${page + 1} / ${n}`;
+  $('#vw-prev').disabled = page === 0; $('#vw-next').disabled = page === n - 1;
+}
+function closeViewer() {
+  $('#viewer').classList.remove('open'); cur = null;
+  if (/^rosi-\d{3}$/.test(location.hash.slice(1))) location.hash = lastView;
+}
+$('#vw-prev').addEventListener('click', () => { if (page > 0) { page--; showPage(); } });
+$('#vw-next').addEventListener('click', () => { if (cur && page < cur.paginas.length - 1) { page++; showPage(); } });
+$('#vw-close').addEventListener('click', closeViewer);
+document.addEventListener('keydown', e => {
+  if (cur) {
+    if (e.key === 'Escape') closeViewer();
+    if (e.key === 'ArrowLeft') $('#vw-prev').click();
+    if (e.key === 'ArrowRight') $('#vw-next').click();
+  } else if (e.key === 'Enter' && e.target.matches('tr[data-code]')) location.hash = e.target.dataset.code.toLowerCase();
+});
+document.addEventListener('click', e => {
+  const s = e.target.closest('[data-scroll]');
+  if (s) { e.preventDefault(); $('#capa').scrollIntoView({ behavior: motionOK ? 'smooth' : 'auto' }); return; }
+  const el = e.target.closest('[data-code]'); if (!el) return;
+  location.hash = el.dataset.code.toLowerCase();
+});
+
+/* Rotas por hash */
+function setView(v) {
+  const changed = v !== lastView; lastView = v;
+  document.querySelectorAll('section.view').forEach(s => s.classList.toggle('active', s.id === 'v-' + v));
+  document.querySelectorAll('nav.tabs a').forEach(a => { if (a.getAttribute('href') === '#' + v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  if (changed) { window.scrollTo(0, 0); armReveals($('#v-' + v)); }
+  onScroll();
+}
+function route() {
+  const h = location.hash.slice(1);
+  if (/^rosi-\d{3}$/.test(h)) {
+    const it = ITEMS.find(x => x.code.toLowerCase() === h);
+    if (it) { if (!VIEWS.includes(lastView) || lastView === 'inicio' && !document.querySelector('#v-inicio.active')) setView(SECTIONS[it.tipo]); openItem(it.code); return; }
+  }
+  if (cur) { $('#viewer').classList.remove('open'); cur = null; }
+  setView(VIEWS.includes(h) ? h : 'inicio');
+}
+['poemas','contos','documentos','outros'].forEach(s => { $('#g-' + s).innerHTML = bySec[s].map(card).join(''); });
+renderTable();
+window.addEventListener('hashchange', route);
+lastView = null;
+route();
+</script>
+</body>
+</html>
